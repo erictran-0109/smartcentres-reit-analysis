@@ -1,3 +1,56 @@
+# SmartCentres REIT Investment Analysis
+
+A solo rebuild of a group assignment (BSMM 8730, Data Acquisition & Management, University of Windsor), done to practice hand-written SQL and build a personal portfolio project.
+
+Investment analysis (not a trading signal) of whether to buy, hold, or avoid SmartCentres REIT (SRU.UN), based on 6 years of price history (2020–2026), peer REIT comparison, macroeconomic sensitivity to interest rates and inflation, and financial health drawn from both automated data (yfinance) and manually-read regulatory filings (SEDAR+).
+
+## Power BI Dashboard
+
+An interactive 3-page dashboard connects directly to MySQL: overview → driver analysis → recommendation.
+
+**Key finding:** dividend yield of 6.76% is the highest among retail REIT peers (5.78%, 5.54%), and the AFFO payout ratio is a healthy 86.4% — far from the 204% figure yfinance shows when calculated on accounting profit instead of AFFO. However, the price sits at 99.29% of its 2020–2026 range, and debt-to-equity is 85x with ROE at only 3.11%.
+
+| Overview | Driver Analysis | Recommendation |
+|---|---|---|
+| ![Overview](images/01_overview.png) | ![Driver Analysis](images/02_driver_analysis.png) | ![Recommendation](images/03_recommendation.png) |
+
+**Recommendation: HOLD** — keep it if you own it, be careful buying more at today's price.
+1. Income is solid — yield leads the peer group, AFFO payout ratio is healthy.
+2. Price has little room left to grow — near its 6-year high.
+3. Debt makes it rate-sensitive — 85x debt-to-equity with modest BoC rate hikes possible in 2027.
+
+The `.pbix` file is included in `dashboard/`. It needs a live connection to the local MySQL database to refresh, but the imported data ships with the file, so it opens and displays correctly without one.
+
+## Repo structure
+acquisition/
+  yfinance_pull.py                 Price history, fundamentals, news (SmartCentres)
+  wowa_scraping.py                 Peer REIT type/sector + current metrics
+  interest_rate_pull.py            Bank of Canada overnight rate
+  inflation_cpi_pull.py            Bank of Canada CPI
+  smartcentres_documents_pull.py   Investor relations PDF scraper
+  smartcentres_pdf_to_json.py      Investor PDFs to JSON
+  sedar_pdf_to_json.py             SEDAR+ filing PDFs to JSON
+  save_raw_data.py                 Saves yfinance + wowa raw pulls to data/raw/
+  process_market_data.py           Cleans fundamentals/news to data/processed/
+  extract_key_fundamentals.py      AFFO payout ratio (read manually from SEDAR+) into MySQL
+  load_mysql.py                    Loads all structured CSVs into MySQL
+  import_market_data.py            Loads fundamentals/news into MongoDB
+  import_investor_documents.py     Loads investor documents into MongoDB
+  import_sedar_documents.py        Loads SEDAR+ documents into MongoDB
+  validate_mongodb.py              Sanity-checks MongoDB connectivity
+analysis/
+  make_charts.py                   Generates PNG charts from the data
+  mongo_insights.py                Pulls qualitative insights from MongoDB text
+  test_connections.py              Confirms MySQL and MongoDB are reachable
+  outputs/                         Generated charts (PNG) and data (CSV)
+dashboard/
+  smartcentres_dashboard.pbix      Power BI dashboard (3 pages)
+sql/
+  01-06_*.sql                      Analysis queries; 02-06 saved as MySQL Views
+data/
+  raw/                             Untouched acquisition output (gitignored PDFs only)
+  processed/                       Cleaned/joined output, ready for database loading
+images/                            Dashboard page screenshots (used in this README)
 
 ## Setup
 
