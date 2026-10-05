@@ -1,0 +1,5 @@
+company_id,symbol,current_price,dividend_yield,source,pulled_at
+smartcentres,SRU-UN.TO,26.9,6.76,yfinance,2026-09-11T01:53:24.890902
+riocan,REI-UN.TO,20.66,5.54,yfinance,2026-09-11T01:53:25.150204
+ct_reit,CRT-UN.TO,16.74,5.78,yfinance,2026-09-11T01:53:25.442079
+choice_properties,CHP-UN.TO,15.01,5.07,yfinance,2026-09-11T01:53:25.756026
